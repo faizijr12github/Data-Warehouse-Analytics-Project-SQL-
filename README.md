@@ -1,160 +1,195 @@
-📊 Data Warehouse Analytics Project (SQL)
-📖 Overview
+# Data Warehouse Analytics Project — SQL Server
 
-This project demonstrates the creation of a Data Warehouse using SQL Server by transforming raw flat files into a structured schema and performing analytical queries to generate business insights.
+> *From raw flat files to a structured star schema — enabling efficient querying, KPI generation, and business intelligence reporting.*
 
-The project follows a star schema approach with dimension and fact tables, enabling efficient reporting and analytics.
+---
 
-🏗️ Database Setup
-🔹 Database Name
+## Overview
 
-DataWarehouseAnalytics
+This project demonstrates the end-to-end creation of a **Data Warehouse using SQL Server** — transforming raw CSV flat files into a structured analytical schema and performing advanced SQL queries to generate meaningful business insights.
 
-🔹 Schema
+The project follows a **star schema approach** with clearly separated dimension and fact tables, enabling efficient reporting and scalable analytics.
 
-gold → Final curated layer for analytics
+---
 
-📂 Data Model
-⭐ Fact Table
+## Database Setup
 
-fact_sales → Contains transactional sales data
+| Property | Value |
+|---|---|
+| **Database Name** | `DataWarehouseAnalytics` |
+| **Analytics Schema** | `gold` — final curated layer for reporting |
 
-📘 Dimension Tables
+>  **Important:** Running the setup script will **drop and recreate the database**, resulting in permanent data loss. Always ensure proper backups before execution.
 
-dim_customers → Customer details
+---
 
-dim_products → Product information
+## Data Model
 
-⚙️ Key Features
+The warehouse follows a classic **Star Schema** design:
 
-🗄️ Automated database creation and reset
+```
+                    ┌────────────────┐
+                    │  dim_customers │
+                    │  (Customer     │
+                    │   Details)     │
+                    └───────┬────────┘
+                            │
+┌───────────────┐    ┌──────▼───────┐    ┌───────────────┐
+│  dim_products │    │  fact_sales  │    │  (extensible  │
+│  (Product     ├────►  (Sales      │    │   for future  │
+│   Details)    │    │  Transactions)    │   dimensions) │
+└───────────────┘    └──────────────┘    └───────────────┘
+```
 
-📥 Bulk data loading from CSV (Flat Files)
+### Fact Table
 
-🧱 Star schema design implementation
+| Table | Description |
+|---|---|
+| `fact_sales` | Core transactional sales data — the central table of the schema |
 
-🔍 Data exploration using SQL queries
+### Dimension Tables
 
-📊 KPI generation using SQL
+| Table | Description |
+|---|---|
+| `dim_customers` | Customer profile and demographic details |
+| `dim_products` | Product catalog and category information |
 
-📈 Advanced analytics using joins and window functions
+---
 
-🚀 ETL Process
+## ETL Process
 
-Extract
+| Stage | Detail |
+|---|---|
+| **Extract** | Raw data imported from CSV flat files |
+| **Transform** | Structured and cleaned into dimension and fact tables |
+| **Load** | Loaded into the `gold` schema via `BULK INSERT` |
 
-Data imported from CSV flat files
+---
 
-Transform
+## Key Features
 
-Structured into dimension and fact tables
+-  **Automated database creation and reset** — repeatable setup script
+-  **Bulk data loading** from CSV flat files using `BULK INSERT`
+-  **Star schema implementation** — dimension + fact table design
+-  **Data exploration** using `INFORMATION_SCHEMA` queries
+-  **KPI generation** using SQL aggregations
+-  **Advanced analytics** using joins, subqueries, and window functions
 
-Load
+---
 
-Loaded into gold schema using BULK INSERT
+## Key Analysis Performed
 
-📊 Key Analysis Performed
-🔹 General Insights
+### General Business Insights
+- Total Sales, Total Orders, Total Customers, Total Products
+- Quantity Sold and Average Selling Price
 
-Total Sales
+### Customer Analysis
+- Customer distribution by **Country** and **Gender**
+- **Top & Lowest Revenue** generating customers
 
-Total Orders
+### Product Analysis
+- Products segmented by **Category**
+- **Average Cost** per category
+- **Top 5 Best & Worst** performing products by revenue
 
-Total Customers
+### Sales Analysis
+- Revenue breakdown by **Category** and **Customer**
+- Sales distribution by **Country**
+- **Time Range Analysis** of sales activity
 
-Total Products
+---
 
-Quantity Sold
+## KPIs Generated
 
-Average Selling Price
+| KPI | Description |
+|---|---|
+|  **Total Sales** | Sum of all revenue generated |
+|  **Quantity Sold** | Total units sold across all products |
+|  **Average Selling Price** | Mean revenue per unit sold |
+|  **Order Count** | Total number of distinct orders |
+|  **Product Count** | Number of unique products in the catalog |
+|  **Customer Count** | Total registered customers |
+|  **Active Customers** | Customers who placed at least one order |
 
-🔹 Customer Analysis
+---
 
-Customers by Country
+## Advanced SQL Concepts Used
 
-Customers by Gender
+```sql
+-- Joins
+INNER JOIN dim_customers ON fact_sales.customer_id = dim_customers.customer_id
 
-Top & Lowest Revenue Customers
+-- Window Functions
+DENSE_RANK() OVER (ORDER BY total_revenue DESC)
 
-🔹 Product Analysis
+-- Date Functions
+DATEDIFF(DAY, order_date, GETDATE())
 
-Products by Category
+-- Aggregates
+SUM(), AVG(), COUNT()
 
-Average Cost per Category
+-- Schema Exploration
+SELECT * FROM INFORMATION_SCHEMA.TABLES
+SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+```
 
-Top 5 Best & Worst Performing Products
+| Concept | Usage |
+|---|---|
+| **Joins** | Linking fact and dimension tables |
+| **Aggregate Functions** | `SUM`, `AVG`, `COUNT` for KPI calculation |
+| **Window Functions** | `DENSE_RANK` for top/bottom product rankings |
+| **Date Functions** | `DATEDIFF` for time range analysis |
+| **Subqueries** | Nested logic for filtered aggregations |
+| **`GROUP BY` / `ORDER BY`** | Segmentation and result ordering |
+| **`INFORMATION_SCHEMA`** | Data exploration and schema auditing |
 
-🔹 Sales Analysis
+---
 
-Revenue by Category
+##  Tools & Technologies
 
-Revenue by Customer
+| Tool | Purpose |
+|---|---|
+| **SQL Server** | Database engine and warehouse host |
+| **T-SQL** | Query language for all transformations and analysis |
+| **CSV Flat Files** | Raw data source for the ETL pipeline |
+| **Data Warehousing Concepts** | Star schema, ETL, layered architecture (`gold`) |
 
-Sales Distribution by Country
+---
 
-Sales Time Range Analysis
-
-📌 KPIs Generated
-
-💰 Total Sales
-
-📦 Quantity Sold
-
-💵 Average Selling Price
-
-🧾 Order Count
-
-🛍️ Product Count
-
-👥 Customer Count
-
-✅ Customers Who Placed Orders
-
-🧠 Advanced SQL Concepts Used
-
-Joins (Inner Join)
-
-Aggregate Functions (SUM, AVG, COUNT)
-
-Window Functions (DENSE_RANK)
-
-Date Functions (DATEDIFF)
-
-Group By & Order By
-
-Subqueries
-
-Data Exploration via INFORMATION_SCHEMA
-
-⚠️ Important Note
-
-Running the script will drop and recreate the database, resulting in permanent data loss.
-Ensure proper backups before execution.
-
-🛠️ Tools & Technologies
-
-SQL Server
-
-T-SQL
-
-Data Warehousing Concepts
-
-CSV Flat Files
-
-📂 Use Case
+##  Use Cases
 
 This project is ideal for:
 
-Learning Data Warehousing fundamentals
+-  Learning **Data Warehousing fundamentals** from scratch
+-  Practicing **SQL for analytics** beyond basic CRUD
+-  Building a **foundation for Power BI** or other BI visualization tools
+-  Understanding **ETL pipeline design** with flat file sources
 
-Practicing SQL for analytics
+---
 
-Building a foundation for Power BI / Data Visualization
+##  Outcome
 
-💡 Outcome
+-  Converted raw flat files into a **fully structured data warehouse**
+-  Enabled **efficient querying and KPI generation** via a clean star schema
+-  Built a **strong, scalable foundation** for business intelligence reporting
 
-Converted raw flat files into a structured data warehouse
+---
 
-Enabled efficient querying and analytics
+## Project Structure
 
-Built a strong foundation for business intelligence reporting
+```
+ data-warehouse-analytics-sql
+ ┣  01_database_setup.sql             # Database and schema creation script
+ ┣  02_bulk_insert.sql                # ETL — bulk load from CSV files
+ ┣  03_exploration_queries.sql        # Data exploration and schema audit
+ ┣  04_kpi_analysis.sql               # KPI generation queries
+ ┣  05_advanced_analytics.sql         # Joins, window functions, subqueries
+ ┣  data/                             # Source CSV flat files
+ ┗  README.md                         # Project documentation
+```
+
+---
+
+## Connect
+
+If you found this project useful or have suggestions, feel free to open an **Issue** or submit a **Pull Request**.
